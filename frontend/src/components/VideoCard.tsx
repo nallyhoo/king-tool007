@@ -1,4 +1,4 @@
-import { Video } from "@/lib/types";
+import type { Video } from "@/lib/types";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "./ui/button";
 

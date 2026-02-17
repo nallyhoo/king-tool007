@@ -3,7 +3,7 @@ import { FilterSidebar } from './FilterSidebar';
 import { VideoCard } from './VideoCard';
 import { useVideoLibrary } from '@/hooks/useVideoLibrary';
 import { Button } from "@/components/ui/button";
-import {- Video -} from "@/lib/types";
+import { Video } from "@/lib/types";
 
 export function VideoLibrary() {
   const [layout, setLayout] = useState('grid');

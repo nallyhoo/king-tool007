@@ -1,4 +1,4 @@
-import { Video } from '@/lib/types';
+import type { Video, Download } from '@/lib/types';
 
 const API_URL = '/api';
 
@@ -18,5 +18,17 @@ async function fetchFromAPI(endpoint: string, options: RequestInit = {}): Promis
 export const apiService = {
     async getVideos(): Promise<Video[]> {
         return await fetchFromAPI('videos');
+    },
+    async getDownloads(): Promise<Download[]> {
+        return await fetchFromAPI('downloads');
+    },
+    async startDownload(url: string): Promise<any> {
+        return await fetchFromAPI('downloads', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ url }),
+        });
     }
 };

@@ -1,6 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { apiService } from '@/services/api';
-import { Video } from '@/lib/types';
+import type { Video } from '@/lib/types';
 
 // Mock data for initial development
 const mockVideos: Video[] = [
@@ -16,7 +15,6 @@ const mockVideos: Video[] = [
     quality: '1080p',
     views: 1234567,
     tags: ['animation', 'short film', 'blender'],
-    description: 'A short computer-animated film by the Blender Institute, part of the Blender Foundation.'
   },
   {
     id: '2',
@@ -30,7 +28,6 @@ const mockVideos: Video[] = [
     quality: '1080p',
     views: 543210,
     tags: ['animation', 'fantasy', 'short film'],
-    description: 'A short computer animated film by the Blender Institute, part of the Blender Foundation.'
   },
     {
     id: '3',
@@ -44,7 +41,6 @@ const mockVideos: Video[] = [
     quality: '720p',
     views: 987654,
     tags: ['animation', 'sci-fi', 'short film'],
-    description: 'The first open movie, created by the Blender Foundation.'
   }
 ];
 

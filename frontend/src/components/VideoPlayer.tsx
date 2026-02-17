@@ -1,4 +1,4 @@
-import { Video } from '@/lib/types';
+import type { Video } from '@/lib/types';
 
 interface VideoPlayerProps {
   video: Video;
@@ -20,7 +20,6 @@ export function VideoPlayer({ video, onClose }: VideoPlayerProps) {
               <span key={tag} className="bg-gray-200 text-gray-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded-full">{tag}</span>
             ))}
           </div>
-          <p className="text-gray-800">{video.description}</p>
         </div>
         <button onClick={onClose} className="absolute top-4 right-4 text-white text-2xl">&times;</button>
       </div>
