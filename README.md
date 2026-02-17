@@ -1,159 +1,61 @@
+# Video Manager
 
-# Video Manager API - Developer Guide
+A comprehensive tool for managing, searching, and analyzing video content. This project provides a backend API built with FastAPI and a frontend client built with React. It includes features for video downloading, processing, and advanced search using Elasticsearch.
 
-Welcome to the developer guide for the Video Manager API! This guide will walk you through everything you need to know to start integrating our powerful video processing services into your application.
+## Features
 
-## 1. Getting Started
+*   **Video Downloading:** Download videos from various sources.
+*   **Video Processing:** Automatically transcode and process videos.
+*   **Advanced Search:** Full-text search on video metadata and transcripts using Elasticsearch.
+*   **Real-time Updates:** WebSocket integration for real-time progress updates.
+*   **User Authentication:** Secure user authentication and authorization.
+*   **Task Queue:** Asynchronous task handling with Celery and Redis.
 
-Before you can make any calls to the API, you need to obtain an access token. Our API uses OAuth2 Bearer tokens for authentication.
+## Technologies
 
-**API Base URL**: `https://api.yourvideomanager.com/v1`
+*   **Backend:**
+    *   Python
+    *   FastAPI
+    *   SQLAlchemy
+    *   PostgreSQL
+    *   Elasticsearch
+    *   Celery
+    *   Redis
+*   **Frontend:**
+    *   React
+    *   TypeScript
+    *   Vite
+*   **DevOps:**
+    *   Docker
+    *   Nginx
 
-### 1.1 Authentication Flow
+## Installation
 
-1.  **Request a Token**: Send a `POST` request to the `/token` endpoint with your client ID and secret.
-
+1.  **Prerequisites:**
+    *   Docker and Docker Compose
+2.  **Clone the repository:**
     ```bash
-    curl -X POST \
-      https://api.yourvideomanager.com/v1/token \
-      -H 'Content-Type: application/x-www-form-urlencoded' \
-      -d 'grant_type=client_credentials&client_id=YOUR_CLIENT_ID&client_secret=YOUR_CLIENT_SECRET'
+    git clone https://github.com/nallyhoo/king-tool007.git
+    cd king-tool007
     ```
-
-2.  **Receive Your Token**: The API will return an access token that is valid for one hour.
-
-    ```json
-    {
-      "access_token": "your-super-secret-token",
-      "token_type": "bearer"
-    }
-    ```
-
-3.  **Authorize Your Requests**: Include this token in the `Authorization` header of all subsequent requests.
-
+3.  **Set up environment variables:**
+    *   Copy the `.env.example` file to `.env` and update the values as needed.
+4.  **Build and run the application:**
     ```bash
-    -H 'Authorization: Bearer your-super-secret-token'
+    docker-compose up -d --build
     ```
 
-## 2. Common Use Cases
+## Usage
 
-Here are some examples of how to interact with the API for common tasks.
+*   **API:** The backend API is accessible at `http://localhost:8000`.
+*   **Frontend:** The frontend application is accessible at `http://localhost:3000`.
 
-### 2.1 Submit a Video for Processing
+## Contributing
 
-This is the primary way to add a new video to the system. You provide a video URL and a list of operations to perform.
+Contributions are welcome! Please follow these steps:
 
-**Endpoint**: `POST /jobs`
-
-**Python Example**
-
-```python
-import requests
-
-api_url = "https://api.yourvideomanager.com/v1/jobs"
-headers = {"Authorization": "Bearer your-super-secret-token"}
-
-data = {
-  "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-  "operations": ["thumbnail", "transcode_720p"]
-}
-
-response = requests.post(api_url, headers=headers, json=data)
-
-if response.status_code == 202:
-    job = response.json()
-    print(f"Successfully submitted job: {job['job_id']}")
-else:
-    print(f"Error: {response.text}")
-```
-
-**JavaScript (fetch) Example**
-
-```javascript
-const apiUrl = 'https://api.yourvideomanager.com/v1/jobs';
-const headers = {
-  'Content-Type': 'application/json',
-  'Authorization': 'Bearer your-super-secret-token'
-};
-
-const body = JSON.stringify({
-  video_url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
-  operations: ['thumbnail', 'transcode_720p']
-});
-
-fetch(apiUrl, { method: 'POST', headers, body })
-  .then(response => response.json())
-  .then(data => {
-    console.log('Job submitted:', data.job_id);
-  })
-  .catch(error => {
-    console.error('Error submitting job:', error);
-  });
-```
-
-### 2.2 Check Job Status
-
-Once a job is submitted, you can poll this endpoint to check its progress.
-
-**Endpoint**: `GET /jobs/{job_id}`
-
-**cURL Example**
-
-```bash
-curl -X GET \
-  https://api.yourvideomanager.com/v1/jobs/abc-123-def-456 \
-  -H 'Authorization: Bearer your-super-secret-token'
-```
-
-## 3. WebSocket Notifications
-
-For real-time updates on job status, you can connect to our WebSocket server.
-
-**Connection URL**: `wss://ws.yourvideomanager.com/v1/ws?token=your-super-secret-token`
-
-### 3.1 Event Types & Payloads
-
--   **`job:queued`**: When a job is first accepted.
--   **`job:processing`**: When processing begins.
--   **`job:completed`**: When all operations are finished successfully.
--   **`job:failed`**: If an error occurs during processing.
-
-**Example JavaScript Client**
-
-```javascript
-const socket = new WebSocket('wss://ws.yourvideomanager.com/v1/ws?token=your-super-secret-token');
-
-socket.onopen = () => {
-  console.log('WebSocket connection established.');
-};
-
-socket.onmessage = (event) => {
-  const data = JSON.parse(event.data);
-  console.log('Received message:', data);
-
-  // Example: update UI based on job status
-  if (data.event === 'job:completed') {
-    // Unlock video, show thumbnail, etc.
-  }
-};
-
-socket.onerror = (error) => {
-  console.error('WebSocket error:', error);
-};
-```
-
-## 4. Rate Limiting
-
-To ensure fair usage, our API has the following rate limits:
-
--   **Authenticated Users**: 1000 requests per hour.
--   **Job Submission**: 60 jobs per hour.
-
-If you exceed these limits, you will receive a `429 Too Many Requests` response.
-
-## 5. Best Practices
-
--   **Use WebSockets**: For status updates, prefer WebSockets over polling the `GET /jobs/{job_id}` endpoint to conserve resources.
--   **Cache Results**: Cache the results of API calls, especially for video metadata that does not change often.
--   **Handle Errors Gracefully**: Implement logic to handle different HTTP error codes and WebSocket connection issues.
--   **Keep Your Token Secure**: Never expose your access token on the client-side of a web application.
+1.  Fork the repository.
+2.  Create a new branch (`git checkout -b feature/your-feature-name`).
+3.  Make your changes and commit them (`git commit -m 'Add some feature'`).
+4.  Push to the branch (`git push origin feature/your-feature-name`).
+5.  Create a new Pull Request.
