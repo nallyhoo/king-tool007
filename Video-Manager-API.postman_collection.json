@@ -1,0 +1,97 @@
+{
+    "info": {
+        "_postman_id": "...",
+        "name": "Video Manager API",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "Authentication",
+            "item": [
+                {
+                    "name": "Get Access Token",
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "urlencoded",
+                            "urlencoded": [
+                                {"key": "grant_type", "value": "client_credentials"},
+                                {"key": "client_id", "value": "{{CLIENT_ID}}"},
+                                {"key": "client_secret", "value": "{{CLIENT_SECRET}}"}
+                            ]
+                        },
+                        "url": {
+                            "raw": "{{BASE_URL}}/token",
+                            "host": ["{{BASE_URL}}"],
+                            "path": ["token"]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Processing Jobs",
+            "item": [
+                {
+                    "name": "Submit a New Job",
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"video_url\": \"https://www.youtube.com/watch?v=dQw4w9WgXcQ\",\n    \"operations\": [\"thumbnail\", \"transcode_720p\"]\n}",
+                            "options": {"raw": {"language": "json"}}
+                        },
+                        "url": {
+                            "raw": "{{BASE_URL}}/jobs/",
+                            "host": ["{{BASE_URL}}"],
+                            "path": ["jobs", ""]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Job Status",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{BASE_URL}}/jobs/abc-123-def-456",
+                            "host": ["{{BASE_URL}}"],
+                            "path": ["jobs", "abc-123-def-456"]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        }
+    ],
+    "auth": {
+        "type": "bearer",
+        "bearer": [
+            {"key": "token", "value": "{{ACCESS_TOKEN}}", "type": "string"}
+        ]
+    },
+    "event": [
+        {
+            "listen": "prerequest",
+            "script": {
+                "type": "text/javascript",
+                "exec": [""]
+            }
+        },
+        {
+            "listen": "test",
+            "script": {
+                "type": "text/javascript",
+                "exec": [""]
+            }
+        }
+    ],
+    "variable": [
+        {"key": "BASE_URL", "value": "http://127.0.0.1:8000"},
+        {"key": "ACCESS_TOKEN", "value": "fake-super-secret-token"}
+    ]
+}
